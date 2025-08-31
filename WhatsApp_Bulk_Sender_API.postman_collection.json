@@ -1,0 +1,450 @@
+{
+  "info": {
+    "name": "WhatsApp Bulk Sender API",
+    "description": "Coleção completa para testar a API de envio de mensagens em lote via WhatsApp.\n\nPara usar:\n1. Importe esta coleção no Postman\n2. Configure a variável {{baseUrl}} para http://localhost:3000\n3. Execute os requests na ordem: Connect → Status → Send",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "whatsapp-bulk-sender-v1"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "URL base da API"
+    }
+  ],
+  "item": [
+    {
+      "name": "Sistema",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica se a API está funcionando corretamente."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"OK\",\n  \"timestamp\": \"2024-01-15T10:30:00.000Z\",\n  \"service\": \"WhatsApp Bulk Sender\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints para verificar o status do sistema"
+    },
+    {
+      "name": "WhatsApp - Conexão",
+      "item": [
+        {
+          "name": "Status da Conexão",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "status"]
+            },
+            "description": "Verifica o status atual da conexão com o WhatsApp.\n\nStatus possíveis:\n- connected: Conectado e pronto para enviar\n- connecting: Conectando\n- disconnected: Desconectado\n- reconnecting: Tentando reconectar\n- logged_out: Deslogado (precisa fazer nova autenticação)"
+          },
+          "response": [
+            {
+              "name": "Connected",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/status",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "status"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"connected\": true,\n    \"status\": \"connected\",\n    \"qrCode\": null,\n    \"timestamp\": \"2024-01-15T10:30:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Disconnected with QR Code",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/status",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "status"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"connected\": false,\n    \"status\": \"connecting\",\n    \"qrCode\": \"data:image/png;base64,iVBOR...\",\n    \"timestamp\": \"2024-01-15T10:30:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Conectar WhatsApp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/connect",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "connect"]
+            },
+            "description": "Inicia o processo de conexão com o WhatsApp.\n\nApós executar:\n1. Verifique o console do servidor para ver o QR Code\n2. Escaneie o QR Code com seu WhatsApp\n3. Use o endpoint 'Status da Conexão' para verificar se conectou"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/connect",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "connect"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Inicialização do WhatsApp iniciada\",\n  \"data\": {\n    \"status\": \"initializing\",\n    \"message\": \"Verifique o console para o QR Code ou aguarde a conexão\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Desconectar WhatsApp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/disconnect",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "disconnect"]
+            },
+            "description": "Desconecta o WhatsApp e faz logout da sessão."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/disconnect",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "disconnect"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"WhatsApp desconectado com sucesso\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints para gerenciar a conexão com o WhatsApp"
+    },
+    {
+      "name": "WhatsApp - Envio de Mensagens",
+      "item": [
+        {
+          "name": "Enviar Mensagem Única",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"number\": \"5511999999999\",\n  \"message\": \"Olá! Esta é uma mensagem de teste enviada via API.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "send"]
+            },
+            "description": "Envia uma mensagem única para um número específico.\n\n**Parâmetros:**\n- `number`: Número do telefone (com ou sem código do país)\n- `message`: Texto da mensagem (1-4096 caracteres)\n\n**Formatos de número aceitos:**\n- 5511999999999\n- +5511999999999\n- 11999999999\n- (11) 99999-9999"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"number\": \"5511999999999\",\n  \"message\": \"Olá! Esta é uma mensagem de teste.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/send",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "send"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Mensagem enviada com sucesso\",\n  \"data\": {\n    \"messageId\": \"3A123456789ABCDEF\",\n    \"number\": \"5511999999999\",\n    \"timestamp\": \"2024-01-15T10:30:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Validation Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"number\": \"123\",\n  \"message\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/send",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "send"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"error\": \"Dados inválidos\",\n  \"details\": [\n    \"Número de telefone deve ter pelo menos 10 dígitos\",\n    \"Mensagem não pode estar vazia\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Enviar Mensagens em Lote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [\n    {\n      \"number\": \"5511999999999\",\n      \"message\": \"Olá João! Como você está? Esta é uma mensagem personalizada.\"\n    },\n    {\n      \"number\": \"5511888888888\"\n    },\n    {\n      \"number\": \"5511777777777\",\n      \"message\": \"Oi Maria! Tudo bem? Mensagem especial para você.\"\n    }\n  ],\n  \"defaultMessage\": \"Olá! Esta é uma mensagem automática enviada via API. Se você recebeu esta mensagem é porque está na nossa lista de contatos.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/send-bulk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "send-bulk"]
+            },
+            "description": "Envia mensagens para múltiplos números.\n\n**Parâmetros:**\n- `messages`: Array com os números e mensagens\n  - `number`: Número do telefone (obrigatório)\n  - `message`: Mensagem personalizada (opcional)\n- `defaultMessage`: Mensagem padrão para números sem mensagem personalizada\n\n**Limites:**\n- Máximo de 100 mensagens por lote\n- Delay automático de 2 segundos entre mensagens\n- Rate limiting: 5 requests por 15 minutos\n\n**Comportamento:**\n- Se um número tem `message`, usa ela\n- Se não tem `message`, usa `defaultMessage`\n- Deve ter pelo menos uma das duas (personalizada ou padrão)"
+          },
+          "response": [
+            {
+              "name": "Success with Mixed Results",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"messages\": [\n    {\n      \"number\": \"5511999999999\",\n      \"message\": \"Olá João!\"\n    },\n    {\n      \"number\": \"5511888888888\"\n    }\n  ],\n  \"defaultMessage\": \"Mensagem padrão\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/send-bulk",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "send-bulk"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Envio em lote processado\",\n  \"data\": {\n    \"statistics\": {\n      \"total\": 2,\n      \"sent\": 1,\n      \"errors\": 1\n    },\n    \"results\": [\n      {\n        \"number\": \"5511999999999\",\n        \"status\": \"sent\",\n        \"messageId\": \"3A123456789ABCDEF\",\n        \"timestamp\": \"2024-01-15T10:30:00.000Z\"\n      },\n      {\n        \"number\": \"5511888888888\",\n        \"status\": \"error\",\n        \"error\": \"Número não existe no WhatsApp\",\n        \"timestamp\": \"2024-01-15T10:30:02.000Z\"\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "Validation Error - Missing Messages",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"messages\": [\n    {\n      \"number\": \"5511999999999\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/whatsapp/send-bulk",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "whatsapp", "send-bulk"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"error\": \"Dados inválidos\",\n  \"details\": [\n    \"Deve haver uma mensagem padrão ou todas as mensagens devem ter texto individual\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Exemplo: Lote com 5 Números",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [\n    {\n      \"number\": \"5511999999999\",\n      \"message\": \"🎉 Olá João! Sua conta foi aprovada! Bem-vindo!\"\n    },\n    {\n      \"number\": \"5511888888888\",\n      \"message\": \"📋 Oi Maria! Lembrete: reunião amanhã às 14h.\"\n    },\n    {\n      \"number\": \"5511777777777\"\n    },\n    {\n      \"number\": \"5511666666666\"\n    },\n    {\n      \"number\": \"5511555555555\",\n      \"message\": \"🚀 Pedro, o projeto foi aprovado! Parabéns!\"\n    }\n  ],\n  \"defaultMessage\": \"📢 Olá! Temos novidades importantes para você. Acesse nossa plataforma para mais detalhes: https://exemplo.com.br\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/send-bulk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "whatsapp", "send-bulk"]
+            },
+            "description": "Exemplo prático de envio para 5 números diferentes:\n\n- 3 mensagens personalizadas\n- 2 números que receberão a mensagem padrão\n- Uso de emojis nas mensagens\n- Mix de diferentes tipos de conteúdo"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints para envio de mensagens via WhatsApp"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-configure baseUrl if not set",
+          "if (!pm.variables.get('baseUrl')) {",
+          "    pm.variables.set('baseUrl', 'http://localhost:3000');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Basic response validation",
+          "pm.test('Status code is success', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has success property', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('success');",
+          "});",
+          "",
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});"
+        ]
+      }
+    }
+  ]
+}
