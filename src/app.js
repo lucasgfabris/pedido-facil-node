@@ -44,8 +44,10 @@ const corsOptions = {
       'http://localhost:3001', 
       'http://localhost:5173', // Vite default
       'http://localhost:8080',
-      'https://pedido-facil-react.vercel.app', // Substitua pela URL do seu frontend
-      process.env.FRONTEND_URL
+      'https://pedido-facil-react.vercel.app', // URL antiga do frontend
+      'https://distribui-f.vercel.app', // URL atual do frontend
+      process.env.FRONTEND_URL,
+      process.env.CORS_ORIGIN
     ];
     
     // Permite qualquer origin em desenvolvimento
