@@ -8,16 +8,25 @@ class WhatsAppController {
 
   async getStatus(req, res) {
     try {
+      console.log('📊 Solicitação de status do WhatsApp...');
       const status = this.whatsappService.getStatus();
+      console.log('📊 Status atual:', JSON.stringify(status, null, 2));
+      
       res.json({
         success: true,
-        data: status
+        data: {
+          ...status,
+          timestamp: new Date().toISOString()
+        }
       });
     } catch (error) {
+      console.error('❌ Erro ao obter status:', error.message);
+      
       res.status(500).json({
         success: false,
         error: 'Erro ao obter status do WhatsApp',
-        details: error.message
+        details: error.message,
+        timestamp: new Date().toISOString()
       });
     }
   }
@@ -108,22 +117,33 @@ class WhatsAppController {
 
   async initializeConnection(req, res) {
     try {
+      console.log('🔌 Tentativa de inicializar conexão WhatsApp...');
+      console.log('📍 Origin:', req.get('Origin'));
+      console.log('🌐 User-Agent:', req.get('User-Agent'));
+      
       await this.whatsappService.initialize();
+      
+      console.log('✅ Inicialização do WhatsApp solicitada com sucesso');
       
       res.json({
         success: true,
         message: 'Inicialização do WhatsApp iniciada',
         data: {
           status: 'initializing',
-          message: 'Verifique o console para o QR Code ou aguarde a conexão'
+          message: 'Verifique o console para o QR Code ou aguarde a conexão',
+          timestamp: new Date().toISOString()
         }
       });
 
     } catch (error) {
+      console.error('❌ Erro ao inicializar WhatsApp:', error.message);
+      console.error('📋 Stack trace:', error.stack);
+      
       res.status(500).json({
         success: false,
         error: 'Erro ao inicializar WhatsApp',
-        details: error.message
+        details: error.message,
+        timestamp: new Date().toISOString()
       });
     }
   }

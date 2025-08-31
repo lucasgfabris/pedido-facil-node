@@ -5,7 +5,7 @@
 const config = {
   // Configurações do servidor
   server: {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 3001, // Mudando para 3001 como o frontend está esperando
     env: process.env.NODE_ENV || 'development',
     cors: {
       origin: process.env.CORS_ORIGIN || '*',
