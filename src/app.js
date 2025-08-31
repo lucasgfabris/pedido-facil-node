@@ -32,39 +32,14 @@ const limiter = rateLimit({
   }
 });
 
-// CORS mais específico e permissivo
+// CORS simplificado - libera todas as origens para resolver problemas de referência
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Permite requisições sem origin (mobile apps, postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Lista de origins permitidas
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:3001', 
-      'http://localhost:5173', // Vite default
-      'http://localhost:8080',
-      'https://pedido-facil-react.vercel.app', // URL antiga do frontend
-      'https://distribui-f.vercel.app', // URL atual do frontend
-      process.env.FRONTEND_URL,
-      process.env.CORS_ORIGIN
-    ];
-    
-    // Permite qualquer origin em desenvolvimento
-    if (process.env.NODE_ENV === 'development') {
-      return callback(null, true);
-    }
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      console.log(`❌ CORS blocked origin: ${origin}`);
-      callback(new Error('Não permitido pelo CORS'));
-    }
-  },
+  origin: true, // Permite todas as origens
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
+  exposedHeaders: ['Content-Length', 'X-Requested-With'],
+  optionsSuccessStatus: 200 // Para suporte a navegadores legados
 };
 
 // Middleware
@@ -74,23 +49,22 @@ app.use(helmet({
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
 
-// Log de debugging para requisições
-app.use((req, res, next) => {
-  console.log(`🔄 ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'} - IP: ${req.ip}`);
-  next();
-});
-
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware específico para requests OPTIONS (preflight CORS)
-app.options('*', (req, res) => {
-  console.log('🔄 Preflight OPTIONS request:', req.path);
+app.options('*', cors(corsOptions)); // Usa a configuração CORS simplificada
+
+// Middleware adicional para garantir headers CORS em todas as respostas
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', req.get('Origin') || '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Origin, Accept');
+  
+  // Log para debug
+  console.log(`🔄 ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'} - IP: ${req.ip}`);
+  next();
 });
 
 // Apply rate limiting to most routes (mas não para connect/status)
