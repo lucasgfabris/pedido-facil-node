@@ -219,13 +219,33 @@ router.post('/send-bulk', whatsappController.sendBulkMessages);
  * @swagger
  * /api/whatsapp/connect:
  *   post:
- *     summary: Inicializar conexão WhatsApp
+ *     summary: Inicializar conexão WhatsApp (com limpeza de sessões)
  *     tags: [WhatsApp]
+ *     description: Limpa todas as sessões existentes e inicializa uma nova conexão WhatsApp. Isso garante que não haja conflitos com sessões anteriores.
  *     responses:
  *       200:
- *         description: Inicialização iniciada
+ *         description: Sessões limpas e inicialização iniciada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         status:
+ *                           type: string
+ *                           example: "initializing"
+ *                         message:
+ *                           type: string
+ *                           example: "Sessões anteriores foram limpas. Verifique o console para o QR Code ou aguarde a conexão"
+ *                         timestamp:
+ *                           type: string
+ *                           format: date-time
  *       500:
- *         description: Erro ao inicializar
+ *         description: Erro ao inicializar ou limpar sessões
  */
 router.post('/connect', whatsappController.initializeConnection);
 

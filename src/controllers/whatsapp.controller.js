@@ -121,16 +121,21 @@ class WhatsAppController {
       console.log('📍 Origin:', req.get('Origin'));
       console.log('🌐 User-Agent:', req.get('User-Agent'));
       
+      // Primeiro limpa todas as sessões existentes para garantir uma conexão limpa
+      console.log('🗑️  Limpando sessões existentes antes de conectar...');
+      await this.whatsappService.clearAllSessions();
+      
+      // Depois inicializa a nova conexão
       await this.whatsappService.initialize();
       
       console.log('✅ Inicialização do WhatsApp solicitada com sucesso');
       
       res.json({
         success: true,
-        message: 'Inicialização do WhatsApp iniciada',
+        message: 'Sessões limpas e inicialização do WhatsApp iniciada',
         data: {
           status: 'initializing',
-          message: 'Verifique o console para o QR Code ou aguarde a conexão',
+          message: 'Sessões anteriores foram limpas. Verifique o console para o QR Code ou aguarde a conexão',
           timestamp: new Date().toISOString()
         }
       });
