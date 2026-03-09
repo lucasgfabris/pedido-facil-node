@@ -49,14 +49,14 @@ git pull origin main
 npm install --production
 
 # 3. Reiniciar o serviço
-pm2 restart pedido-facil-api
+pm2 restart node-whatsapp-bulk
 # OU se usando systemctl:
-sudo systemctl restart pedido-facil-api
+sudo systemctl restart node-whatsapp-bulk
 
 # 4. Verificar logs
-pm2 logs pedido-facil-api
+pm2 logs node-whatsapp-bulk
 # OU
-journalctl -f -u pedido-facil-api
+journalctl -f -u node-whatsapp-bulk
 ```
 
 ### 3. Verificações de Firewall
