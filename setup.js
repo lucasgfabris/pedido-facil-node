@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const path = require('path');
 const { execSync } = require('child_process');
 
 console.log('🤖 WhatsApp Bulk Sender - Script de Configuração\n');
@@ -10,8 +9,8 @@ console.log('🤖 WhatsApp Bulk Sender - Script de Configuração\n');
 const nodeVersion = process.version;
 const major = parseInt(nodeVersion.slice(1).split('.')[0]);
 
-if (major < 16) {
-  console.error('❌ Erro: Node.js 16+ é necessário. Versão atual:', nodeVersion);
+if (major < 18) {
+  console.error('❌ Erro: Node.js 18+ é necessário. Versão atual:', nodeVersion);
   process.exit(1);
 }
 

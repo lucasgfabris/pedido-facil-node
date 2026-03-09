@@ -46,7 +46,7 @@ const config = {
     phoneNumber: {
       minLength: 10,
       maxLength: 15,
-      pattern: /^\+?[\d\s\-\(\)]+$/
+      pattern: /^\+?[\d\s\-()]+$/
     },
     message: {
       minLength: 1,

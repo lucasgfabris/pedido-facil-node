@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const phoneNumberSchema = Joi.string()
-  .pattern(/^\+?[\d\s\-\(\)]+$/)
+  .pattern(/^\+?[\d\s\-()]+$/)
   .min(10)
   .max(15)
   .required()

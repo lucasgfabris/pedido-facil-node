@@ -1,48 +1,49 @@
-# Pedido Facil Node
+# Node WhatsApp Bulk
 
-![GitHub repo size](https://img.shields.io/github/repo-size/lucasgfabris/pedido-facil-node?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/lucasgfabris/pedido-facil-node?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/lucasgfabris/node-whatsapp-bulk?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/lucasgfabris/node-whatsapp-bulk?style=for-the-badge)
 
 > API para envio de mensagens em lote via WhatsApp usando a biblioteca Baileys. Suporta ate 100 mensagens por requisicao com rate limiting, reconexao automatica e documentacao Swagger.
 
-<img src="imagem.png" alt="Pedido Facil Node">
+<img src="imagem.png" alt="Node WhatsApp Bulk">
 
 ## Pre-requisitos
 
 Antes de comecar, verifique se voce atendeu aos seguintes requisitos:
 
-- Node.js 16 ou superior
+- Node.js 18 ou superior
 - npm ou yarn
 - WhatsApp instalado no celular (para escanear o QR Code)
 
 ## Instalando
 
-Para instalar o Pedido Facil Node, siga estas etapas:
+Para instalar o Node WhatsApp Bulk, siga estas etapas:
 
 ```bash
-git clone https://github.com/lucasgfabris/pedido-facil-node.git
-cd pedido-facil-node
+git clone https://github.com/lucasgfabris/node-whatsapp-bulk.git
+cd node-whatsapp-bulk
 npm install
 cp env.example .env
 ```
 
 ### Configuracao
 
-Edite o arquivo `.env`:
+Copie `env.example` para `.env` e ajuste conforme necessario. Variaveis disponiveis:
 
-```env
-PORT=3000
-NODE_ENV=development
-WHATSAPP_SESSION_DIR=./sessions
-WHATSAPP_TIMEOUT=30000
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=5
-LOG_LEVEL=info
-```
+| Variavel | Descricao |
+|----------|-----------|
+| `PORT` | Porta do servidor (ex.: 3001) |
+| `NODE_ENV` | development / production |
+| `FRONTEND_URL`, `CORS_ORIGIN` | URL do frontend e CORS |
+| `WHATSAPP_SESSION_DIR` | Pasta das sessoes (ex.: ./sessions) |
+| `WHATSAPP_TIMEOUT`, `WHATSAPP_QR_TIMEOUT` | Timeouts em ms |
+| `WHATSAPP_RECONNECT_ATTEMPTS`, `WHATSAPP_MESSAGE_DELAY`, `WHATSAPP_MAX_BULK` | Reconexao e limite de envio em lote |
+| `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS` | Janela e max de requisicoes |
+| `LOG_LEVEL` | Nivel do log (debug, info, etc.) |
 
 ## Usando
 
-Para usar o Pedido Facil Node, siga estas etapas:
+Para usar o Node WhatsApp Bulk, siga estas etapas:
 
 ```bash
 # Desenvolvimento (com hot reload)
@@ -110,7 +111,7 @@ npm start
 ## Estrutura do Projeto
 
 ```
-pedido-facil-node/
+node-whatsapp-bulk/
 ├── src/
 │   ├── app.js                 # Aplicacao principal
 │   ├── config/
@@ -128,7 +129,7 @@ pedido-facil-node/
 
 ## Contribuindo
 
-Para contribuir com Pedido Facil Node, siga estas etapas:
+Para contribuir com Node WhatsApp Bulk, siga estas etapas:
 
 1. Bifurque este repositorio.
 2. Crie um branch: `git checkout -b <nome_branch>`.
