@@ -27,7 +27,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   // Pular rate limit para algumas rotas essenciais
-  skip: (req, res) => {
+  skip: (req, _res) => {
     return req.path === '/api/whatsapp/connect' || req.path === '/api/whatsapp/status';
   }
 });
@@ -100,7 +100,7 @@ app.get('/api/test-cors', (req, res) => {
 app.use('/api/whatsapp', whatsappRoutes);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('❌ Erro não tratado:', err.message);
   console.error('📋 Stack trace completo:', err.stack);
   console.error('🌐 URL:', req.url);
